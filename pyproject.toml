@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ir-cleanup"
+version = "1.0.0"
+description = "A tool to cleanup IR files"
+license = "GPL-3.0-or-later"
+requires-python = ">=3.10"
+
+dependencies = [
+  "matplotlib",
+  "numpy",
+  "soundfile",
+]
+
+authors = [
+  {name = "Yann Collette", email = "ycollette.nospam@free.fr"},
+]
+
+keywords = ["audio", "wav"]
+
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python"
+]
+
+[project.urls]
+Repository = "https://github.com/ycollet/ir-cleanup.git"
+Issues = "https://github.com/ycollet/ir-cleanup/issues"
+Homepage = "https://github.com/ycollet/ir-cleanup"
+Source = "https://github.com/ycollet/ir-cleanup"
+
+[project.scripts]
+ir_cleanup = "ir_cleanup.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
