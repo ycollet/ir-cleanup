@@ -9,7 +9,7 @@ Given an IR file, the tool:
 1. Detects the peak sample and trims any leading content before it
 2. Finds the point where the signal has accumulated a given percentage of its total energy
 3. Cuts the IR at that point
-4. Applies a short linear fade-out (up to 256 samples) at the end to avoid a hard cutoff
+4. Applies a linear fade-out at the end to avoid a hard cutoff
 5. Plots the waveform and cumulative energy curve with the cut point highlighted
 
 This reduces reverb tail length while retaining a configurable amount of the original energy.
@@ -23,26 +23,37 @@ pip install .
 ## Usage
 
 ```bash
-ir_cleanup <input.wav> <output.wav> <energy_percent>
+ir_cleanup [options] <input> <output> <energy_percent>
 ```
 
 | Argument | Description |
 |---|---|
-| `input.wav` | Input IR file (WAV) |
-| `output.wav` | Output truncated IR file (WAV) |
+| `input` | Input IR file (WAV, FLAC, AIFF, OGG, ...) |
+| `output` | Output truncated IR file |
 | `energy_percent` | Energy to retain, strictly between 0 and 100 (e.g. `99.9`) |
 
-### Example
+### Options
+
+| Option | Description |
+|---|---|
+| `--fade-length MS` | Fade-out duration in milliseconds (default: 256 samples) |
+| `--no-plot` | Skip the plot display |
+| `--save-plot FILE` | Save the plot to FILE (can be combined with `--no-plot`) |
+
+### Examples
 
 ```bash
+# Basic usage
 ir_cleanup room.wav room_truncated.wav 99.9
-```
 
-This keeps 99.9% of the total energy and writes the shortened IR to `room_truncated.wav`.
+# Custom fade-out of 10 ms, save plot without displaying it
+ir_cleanup room.flac room_truncated.flac 99.5 --fade-length 10 --no-plot --save-plot room.png
+```
 
 ## Notes
 
-- Multi-channel files are downmixed to mono for energy analysis; the output is mono.
+- Multi-channel files are supported: the energy analysis uses a mono downmix internally, but the cut point is applied to all channels and the output preserves the original channel count.
+- Input and output formats are determined by the file extension. Any format supported by [libsndfile](http://www.mega-nerd.com/libsndfile/) works (WAV, FLAC, AIFF, OGG, ...).
 - The sample rate is preserved from the input file.
 
 ## Dependencies
